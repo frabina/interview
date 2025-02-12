@@ -1,0 +1,135 @@
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+  }
+
+  th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .btn-info { background-color: #17a2b8; }
+  .btn-warning { background-color: #ffc107; }
+  .btn-danger { background-color: #dc3545; }
+  .btn-primary { background-color: #007bff; }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  #account-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  #modal-content {
+    max-width: 500px;
+  }
+</style>
+<%= link_to 'New Client', new_client_path, class: 'btn btn-info' %><table>
+  <thead>
+    <tr>
+      <th>Client Name</th>
+      <th>Email</th>
+      <th>Emp Code</th>
+      <th> Actions </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @clients.each do |client| %>
+      <tr>
+        <td><%= client.name %></td>    <!-- Use <td> instead of <tr> -->
+        <td><%= client.email %></td>
+        <td><%= client.emp_code %></td>
+        <td>
+          <%= link_to 'Show', client_path(client), class: 'btn btn-info' %>
+          <%= link_to 'Edit', edit_client_path(client), class: 'btn btn-warning' %>
+          <%= link_to 'Destroy', client_path(client), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          <%= link_to 'Add Account', new_client_account_path(client), remote: true, class: 'btn btn-info', data: { client_id: client.id } %>
+          <button class="btn btn-primary toggle-accounts-btn" data-client-id="<%= client.id %>">Accounts</button>
+        </td>
+      </tr>
+        <% if client.accounts.any? %>
+        <tr class="accounts-section" id="accounts-<%= client.id %>" style="display: none;">
+          <td colspan="4">
+            <strong>Accounts:</strong>
+            <table class="table table-sm table-striped">
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% client.accounts.each do |account| %>
+                  <tr>
+                    <td><%= account.account_number %></td>
+                    <td><%= account.branch %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+  <%= paginate @clients %>
+
+<div id="account-modal" style="display: none;">
+  <div id="modal-content"></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const toggleButtons = document.querySelectorAll(".toggle-accounts-btn");
+
+  toggleButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const clientId = button.getAttribute("data-client-id");
+      const accountSection = document.getElementById(`accounts-${clientId}`);
+
+      if (accountSection.style.display === "none" || accountSection.style.display === "") {
+        accountSection.style.display = "table-row"; // Show the section
+      } else {
+        accountSection.style.display = "none"; // Hide the section
+      }
+    });
+  });
+});
+
+
+
+
+</script>

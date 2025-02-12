@@ -1,0 +1,7 @@
+alert("Account created successfully for <%= @client.name %>");
+
+// Hide the modal after successful creation
+document.getElementById('account-modal').style.display = 'none';
+
+// Optionally, reload the page or update the client row
+location.reload();  // Or implement dynamic row updates

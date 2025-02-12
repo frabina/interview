@@ -1,0 +1,15 @@
+<%= form_with(model: [@client, @account], remote: true, html: { id: 'new_account_form' }) do |f| %>
+  <div>
+    <%= f.label :account_number %><br>
+    <%= f.text_field :account_number %>
+  </div>
+
+  <div>
+    <%= f.label :branch %><br>
+    <%= f.text_field :branch %>
+  </div>
+
+  <div>
+    <%= f.submit 'Create Account' %>
+  </div>
+<% end %>
